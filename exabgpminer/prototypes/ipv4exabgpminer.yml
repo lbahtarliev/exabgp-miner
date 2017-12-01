@@ -1,11 +1,18 @@
-    exaBGPFeed:
-        class: exabgpminer.ExaBGPOutput
+url: https://github.com/lbahtarliev/exabgpminer
+description: >
+  ExaBGP IPv4 Feed generator
+
+prototypes:
+  exaBGPFeed:
+        class: exabgpminer.Miner
         config:
             exabgp_host: 127.0.0.1
             exabgp_port: 65002
         description: 'RAW JSON to EXABGP Listener and Processor. AKAT Technologies.'
         development_status: STABLE
         indicator_types:
-        - any
+        - IPv4
         node_type: output
-        tags: []
+        tags:
+          - extension
+          - exabgpipv4
