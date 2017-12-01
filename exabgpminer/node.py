@@ -11,14 +11,15 @@ import netaddr
 import urllib
 import urllib2
 
-from minemeld.ft.base import BaseFT
+from minemeld.ft import base
+#from minemeld.ft.base import BaseFT
 #from minemeld.ft import actorbase
 
 LOG = logging.getLogger(__name__)
 
 
 #class Miner(actorbase.ActorBaseFT):
-class Miner(BaseFT):
+class Miner(base.BaseFT):
     def __init__(self, name, chassis, config):
         super(Miner, self).__init__(name, chassis, config)
 
