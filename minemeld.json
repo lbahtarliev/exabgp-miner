@@ -1,12 +1,12 @@
 {
   "version": "0.2",
-  "name": "exabgpminer",
-  "author": "Lyuben Bahtarliev @ AKAT Technologies OOD",
+  "name": "exabgp-miner",
+  "author": "AKAT Technologies OOD",
   "author_email": "lyuben.bahtarliev@akat-t.com",
   "description": "MineMeld node for IP IOCs output feed to ExaBGP HTTP API interface. Used for dynamic BGP Feeds for real-time black listing/holing",
   "entry_points": {
     "minemeld_nodes": {
-      "exabgpminer.ExaBGPOutput": "exabgpminer.node:ExaBGPOutput"
+      "exabgpminer.Miner": "exabgpminer.node:ExaBGPOutput"
     },
     "minemeld_prototypes": {
       "exabgpminer.prototypes": "exabgpminer:prototypes"
