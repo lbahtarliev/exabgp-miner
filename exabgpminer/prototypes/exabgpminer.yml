@@ -12,5 +12,5 @@ prototypes:
         development_status: STABLE
         indicator_types:
         - IPv4
-        node_type: output
+        node_type: miner
         tags: []
