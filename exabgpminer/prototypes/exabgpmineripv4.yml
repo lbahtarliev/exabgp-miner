@@ -3,7 +3,7 @@ description: >
   ExaBGP IPv4 Feed generator
 
 prototypes:
-  exaBGPFeed:
+  exabgpmineripv4:
         class: exabgpminer.Miner
         config:
             exabgp_host: 127.0.0.1
