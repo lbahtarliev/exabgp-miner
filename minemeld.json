@@ -6,10 +6,10 @@
   "description": "MineMeld node for IP IOCs output feed to ExaBGP HTTP API interface. Used for dynamic BGP Feeds for real-time black listing/holing",
   "entry_points": {
     "minemeld_nodes": {
-      "exabgp.Miner": "exabgp.node:Miner"
+      "exabgpminer.Miner": "exabgpminer.node:Miner"
     },
     "minemeld_prototypes": {
-      "exabgp.prototypes": "exabgp:prototypes"
+      "exabgpminer.prototypes": "exabgpminer:prototypes"
     }
   },
   "manifest_version": 0
