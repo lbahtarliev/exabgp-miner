@@ -17,22 +17,22 @@ from minemeld.ft.base import BaseFT
 LOG = logging.getLogger(__name__)
 
 
-#class ExaBGPOutput(actorbase.ActorBaseFT):
-class ExaBGPOutput(BaseFT):
+#class Miner(actorbase.ActorBaseFT):
+class Miner(BaseFT):
     def __init__(self, name, chassis, config):
-        super(ExaBGPOutput, self).__init__(name, chassis, config)
+        super(Miner, self).__init__(name, chassis, config)
 
         self._ls_socket = None
 
     def configure(self):
-        super(ExaBGPOutput, self).configure()
+        super(Miner, self).configure()
 
         self.exabgp_host = self.config.get('exabgp_host', '127.0.0.1')
         self.exabgp_port = int(self.config.get('exabgp_port', '65002'))
 
     def connect(self, inputs, output):
         output = False
-        super(ExaBGPOutput, self).connect(inputs, output)
+        super(Miner, self).connect(inputs, output)
 
     def initialize(self):
         pass
