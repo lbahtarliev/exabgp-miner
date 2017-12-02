@@ -55,8 +55,7 @@ _SYSLOG_FACILITIES = {
     'DEBUG': 7
 }
 
-#class Output(ActorBaseFT):
-class Output(BaseFT):
+class Output(ActorBaseFT):
     def __init__(self, name, chassis, config):
         super(Output, self).__init__(name, chassis, config)
 
