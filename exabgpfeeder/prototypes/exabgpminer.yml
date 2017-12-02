@@ -3,8 +3,8 @@ description: >
   ExaBGP IPv4 Feed generator
 
 prototypes:
-  exabgpminer:
-        class: exabgpminer.Output
+  exabgfeeder:
+        class: exabgpfeeder.Output
         config:
             exabgp_host: '127.0.0.1'
             exabgp_port: '65002'
