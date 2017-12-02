@@ -4,7 +4,7 @@ description: >
 
 prototypes:
   exabgpminer:
-        class: exabgpminer.Miner
+        class: exabgpminer.Output
         config:
             exabgp_host: '127.0.0.1'
             exabgp_port: '65002'

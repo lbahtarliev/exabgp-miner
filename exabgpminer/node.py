@@ -11,29 +11,65 @@ import netaddr
 import urllib
 import urllib2
 
-from minemeld.ft import base
-#from minemeld.ft.base import BaseFT
+#from minemeld.ft import base
 #from minemeld.ft import actorbase
+from minemeld.ft.base import BaseFT
+from minemeld.ft.actorbase import ActorBaseFT
+
+VERSION = "0.1"
 
 LOG = logging.getLogger(__name__)
 
+_SYSLOG_LEVELS = {
+    'KERN': 0,
+    'USER': 1,
+    'MAIL': 2,
+    'DAEMON': 3,
+    'AUTH': 4,
+    'SYSLOG': 5,
+    'LPR': 6,
+    'NEWS': 7,
+    'UUCP': 8,
+    'CRON': 9,
+    'AUTHPRIV': 10,
+    'FTP': 11,
+    'LOCAL0': 16,
+    'LOCAL1': 17,
+    'LOCAL2': 18,
+    'LOCAL3': 19,
+    'LOCAL4': 20,
+    'LOCAL5': 21,
+    'LOCAL6': 22,
+    'LOCAL7': 23
+}
 
-#class Miner(actorbase.ActorBaseFT):
-class Miner(base.BaseFT):
+_SYSLOG_FACILITIES = {
+    'EMERG': 0,
+    'ALERT': 1,
+    'CRIT': 2,
+    'ERR': 3,
+    'WARNING': 4,
+    'NOTICE': 5,
+    'INFO': 6,
+    'DEBUG': 7
+}
+
+#class Output(ActorBaseFT):
+class Output(base.BaseFT):
     def __init__(self, name, chassis, config):
-        super(Miner, self).__init__(name, chassis, config)
+        super(Output, self).__init__(name, chassis, config)
 
         self._ls_socket = None
 
     def configure(self):
-        super(Miner, self).configure()
+        super(Output, self).configure()
 
         self.exabgp_host = self.config.get('exabgp_host', '127.0.0.1')
         self.exabgp_port = int(self.config.get('exabgp_port', '65002'))
 
     def connect(self, inputs, output):
         output = False
-        super(Miner, self).connect(inputs, output)
+        super(Output, self).connect(inputs, output)
 
     def initialize(self):
         pass
@@ -99,7 +135,7 @@ class Miner(base.BaseFT):
 
         self.statistics['message.sent'] += 1
 
-    @base._counting('update.processed')
+    @_counting('update.processed')
     def filtered_update(self, source=None, indicator=None, value=None):
         self._send_exabgp(
             'announce',
@@ -108,7 +144,7 @@ class Miner(base.BaseFT):
             value=value
         )
 
-    @base._counting('withdraw.processed')
+    @_counting('withdraw.processed')
     def filtered_withdraw(self, source=None, indicator=None, value=None):
         self._send_exabgp(
             'withdraw',
