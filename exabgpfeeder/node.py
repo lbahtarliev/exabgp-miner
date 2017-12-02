@@ -11,6 +11,7 @@ import netaddr
 import urllib
 import urllib2
 
+from minemeld.ft.base import _counting
 #from minemeld.ft import base
 #from minemeld.ft import actorbase
 from minemeld.ft.base import BaseFT
