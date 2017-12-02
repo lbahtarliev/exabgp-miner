@@ -55,7 +55,7 @@ _SYSLOG_FACILITIES = {
 }
 
 #class Output(ActorBaseFT):
-class Output(base.BaseFT):
+class Output(BaseFT):
     def __init__(self, name, chassis, config):
         super(Output, self).__init__(name, chassis, config)
 
