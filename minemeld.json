@@ -1,15 +1,15 @@
 {
-  "version": "0.1",
-  "name": "exabgpfeeder",
+  "version": "0.2",
+  "name": "ExaBGP",
   "author": "AKAT Technologies OOD",
   "author_email": "lyuben.bahtarliev@akat-t.com",
-  "description": "MineMeld node for IP IOCs output feed to ExaBGP HTTP API interface. Used for dynamic BGP Feeds for real-time black listing/holing",
+  "description": "Output node to feed ExaBGP HTTP API interface. Used for dynamic BGP Feeds and real-time black listing/holing",
   "entry_points": {
     "minemeld_nodes": {
-      "exabgpfeeder.Output": "exabgpfeeder.node:Output"
+      "ExaBGP.Output": "exabgpfeeder.node:Output"
     },
     "minemeld_prototypes": {
-      "exabgpfeeder.prototypes": "exabgpfeeder:prototypes"
+      "ExaBGP.prototypes": "exabgpfeeder:prototypes"
     }
   },
   "manifest_version": 0

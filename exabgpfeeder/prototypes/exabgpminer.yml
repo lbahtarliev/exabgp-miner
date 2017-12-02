@@ -3,18 +3,19 @@ description: >
   ExaBGP IPv4 Feed generator
 
 prototypes:
-  testBGP:
+  HTTP_API:
     author: AKAT Technologies OOD
-    class: exabgpfeeder.Output
+    class: ExaBGP.Output
     config:
       exabgp_host: '127.0.0.1'
-      exabgp_port: '65002'
+      exabgp_port: '65001'
     description: >
       RAW JSON to EXABGP Listener and Processor.
       AKAT Technologies OOD
-    development_status: EXPERIMENTAL
+    development_status: STABLE
     indicator_types:
-      - any
+      - IPv4
+      - IPv6
     node_type: output
     tags:
       - extension
