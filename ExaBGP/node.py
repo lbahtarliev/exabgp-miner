@@ -12,7 +12,7 @@ import urllib
 import urllib2
 
 from minemeld.ft.base import _counting
-#from minemeld.ft import base
+from minemeld.ft import table
 #from minemeld.ft import actorbase
 from minemeld.ft.base import BaseFT
 from minemeld.ft.actorbase import ActorBaseFT
@@ -71,14 +71,19 @@ class Output(ActorBaseFT):
         output = False
         super(Output, self).connect(inputs, output)
 
+    def _initialize_table(self, truncate=False):
+        self.table = table.Table(self.name, truncate=truncate)
+        self.table.create_index('_age_out')
+
     def initialize(self):
-        pass
+        self._initialize_table()
 
     def rebuild(self):
-        pass
+        self.rebuild_flag = True
+        self._initialize_table(truncate=True)
 
     def reset(self):
-        pass
+        self._initialize_table(truncate=True)
 
     def _send_exabgp(self, message, source=None, indicator=None, value=None):
         now = datetime.datetime.now()
@@ -141,6 +146,7 @@ class Output(ActorBaseFT):
             indicator=indicator,
             value=value
         )
+        self.statistics['added'] += 1
 
     @_counting('withdraw.processed')
     def filtered_withdraw(self, source=None, indicator=None, value=None):
@@ -150,13 +156,11 @@ class Output(ActorBaseFT):
             indicator=indicator,
             value=value
         )
+        self.statistics['removed'] += 1
 
     def mgmtbus_status(self):
         result = super(Output, self).mgmtbus_status()
         return result
-
-    def length(self, source=None):
-        return 0
 
     def start(self):
         super(Output, self).start()
