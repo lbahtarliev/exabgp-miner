@@ -17,7 +17,7 @@ from minemeld.ft import table
 from minemeld.ft.base import BaseFT
 from minemeld.ft.actorbase import ActorBaseFT
 
-VERSION = "0.1"
+VERSION = "0.5"
 
 LOG = logging.getLogger(__name__)
 
@@ -66,6 +66,8 @@ class Output(ActorBaseFT):
 
         self.exabgp_host = self.config.get('exabgp_host', '127.0.0.1')
         self.exabgp_port = int(self.config.get('exabgp_port', '65002'))
+        self.age_out = self.config.get('age_out', 3600)
+        self.age_out_interval = self.config.get('age_out_interval', None)
 
     def connect(self, inputs, output):
         output = False
@@ -146,7 +148,21 @@ class Output(ActorBaseFT):
             indicator=indicator,
             value=value
         )
-        self.statistics['added'] += 1
+
+        try:
+            ipaddr = self._genipformat(indicator)
+            if len(ipaddr) >= 1:
+                now = utc_millisec()
+                age_out = now+self.age_out*1000
+                value['_age_out'] = age_out
+                self.table.put(str(address), value)
+                self.statistics['added'] += 1
+            else:
+                self.statistics['ignored'] += 1
+                return
+        except:
+            self.statistics['ignored'] += 1
+            return
 
     @_counting('withdraw.processed')
     def filtered_withdraw(self, source=None, indicator=None, value=None):
@@ -156,11 +172,28 @@ class Output(ActorBaseFT):
             indicator=indicator,
             value=value
         )
-        self.statistics['removed'] += 1
+
+        try:
+            ipaddr = self._genipformat(indicator)
+            if len(ipaddr) >= 1:
+                if current_value is None:
+                    return
+                current_value.pop('_age_out', None)
+                self.statistics['removed'] += 1
+                self.table.delete(str(address))
+            else:
+                self.statistics['ignored'] += 1
+                return
+        except:
+            self.statistics['ignored'] += 1
+            return
 
     def mgmtbus_status(self):
         result = super(Output, self).mgmtbus_status()
         return result
+
+    def length(self, source=None):
+        return self.table.num_indicators
 
     def start(self):
         super(Output, self).start()
