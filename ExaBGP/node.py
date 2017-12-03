@@ -153,8 +153,28 @@ class Output(ActorBaseFT):
             value=value
         )
 
+    def mgmtbus_status(self):
+        result = super(Output, self).mgmtbus_status()
+
+        if self._actor is not None:
+            result['statistics'].update(self._actor.statistics)
+
+        return result
+
     def length(self, source=None):
-        return 0
+        return self._actor.length()
+
+    def start(self):
+        super(Output, self).start()
+
+        if self._actor is not None:
+            self._actor.start()
+
+    def stop(self):
+        super(Output, self).stop()
+
+        if self._actor is not None:
+            self._actor.kill()
 
     def _genipformat(self, indicator=None):
          if '-' in indicator:
