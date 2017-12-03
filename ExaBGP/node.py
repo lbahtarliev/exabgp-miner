@@ -125,15 +125,13 @@ class Output(ActorBaseFT):
                      LOG.info("%s: %s - %s of %s", str(fields['message']).upper(), ipcidr, str(count+1), str(len(ipaddr)))
                      response = urllib2.urlopen(req, data)
                      count += 1
-
+                     self.statistics['message.sent'] += 1
             else:
                      LOG.info("Bogon CIDRs found: %s", str(len(ipaddr)))
 #                     yield 'ip route 0.0.0.0/32 null0\n'
         except:
             self._ls_socket = None
             raise
-
-        self.statistics['message.sent'] += 1
 
     @_counting('update.processed')
     def filtered_update(self, source=None, indicator=None, value=None):
@@ -158,7 +156,7 @@ class Output(ActorBaseFT):
         return result
 
     def length(self, source=None):
-        return count
+        return 0
 
     def start(self):
         super(Output, self).start()
