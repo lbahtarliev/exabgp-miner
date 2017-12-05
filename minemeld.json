@@ -1,15 +1,15 @@
 {
-  "version": "0.1.8",
-  "name": "exabgp",
+  "version": "0.1.9",
+  "name": "exabgpminer",
   "author": "AKAT Technologies OOD",
   "author_email": "lyuben.bahtarliev@akat-t.com",
   "description": "Output node to feed ExaBGP HTTP API interface. Used for dynamic BGP Feeds and real-time black listing/holing",
   "entry_points": {
     "minemeld_nodes": {
-      "exabgp.Output": "exabgpminer.node:Output"
+      "exabgpminer.Output": "exabgpminer.node:Output"
     },
     "minemeld_prototypes": {
-      "exabgp.prototypes": "exabgpminer:prototypes"
+      "exabgpminer.prototypes": "exabgpminer:prototypes"
     }
   },
   "manifest_version": 0
