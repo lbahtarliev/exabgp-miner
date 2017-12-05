@@ -3,7 +3,7 @@ description: >
   ExaBGP HTTP API IPv4 Feed generator
 
 prototypes:
-  HTTP_API:
+  http_api:
     author: AKAT Technologies OOD
     class: exabgpminer.Output
     config:
