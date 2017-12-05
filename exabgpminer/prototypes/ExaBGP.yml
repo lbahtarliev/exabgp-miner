@@ -5,7 +5,7 @@ description: >
 prototypes:
   HTTP_API:
     author: AKAT Technologies OOD
-    class: ExaBGP_API_Output.Output
+    class: ExaBGP.Output
     config:
       exabgp_host: '127.0.0.1'
       exabgp_port: '65001'
