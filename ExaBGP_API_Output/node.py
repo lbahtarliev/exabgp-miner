@@ -17,7 +17,7 @@ from minemeld.ft import table
 from minemeld.ft.base import BaseFT
 from minemeld.ft.actorbase import ActorBaseFT
 
-VERSION = "0.5"
+VERSION = "0.6"
 
 LOG = logging.getLogger(__name__)
 
@@ -133,7 +133,7 @@ class Output(ActorBaseFT):
                      response = urllib2.urlopen(req, data)
                      count += 1
                      self.statistics['message.sent'] += 1
-                     self.table.num_indicators = count
+               self.table.num_indicators = count
             else:
                      LOG.info("Bogon CIDRs found: %s", str(len(ipaddr)))
 #                    yield 'ip route 0.0.0.0/32 null0\n'
