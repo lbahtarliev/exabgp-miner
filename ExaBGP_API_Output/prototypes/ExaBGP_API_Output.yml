@@ -1,0 +1,22 @@
+url: https://github.com/lbahtarliev/exabgp-miner
+description: >
+  ExaBGP HTTP API IPv4 Feed generator
+
+prototypes:
+  HTTP_API:
+    author: AKAT Technologies OOD
+    class: ExaBGP_API_Output.Output
+    config:
+      exabgp_host: '127.0.0.1'
+      exabgp_port: '65001'
+    description: >
+      RAW JSON to EXABGP Listener and Processor.
+      AKAT Technologies OOD
+    development_status: STABLE
+    indicator_types:
+      - IPv4
+      - IPv6
+    node_type: output
+    tags:
+      - extension
+      - bgp
