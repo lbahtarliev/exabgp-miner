@@ -17,7 +17,7 @@ from minemeld.ft import table
 from minemeld.ft.base import BaseFT
 from minemeld.ft.actorbase import ActorBaseFT
 
-VERSION = "0.6"
+VERSION = "0.7"
 
 LOG = logging.getLogger(__name__)
 
@@ -133,7 +133,6 @@ class Output(ActorBaseFT):
                      response = urllib2.urlopen(req, data)
                      count += 1
                      self.statistics['message.sent'] += 1
-               self.table.num_indicators = count
             else:
                      LOG.info("Bogon CIDRs found: %s", str(len(ipaddr)))
 #                    yield 'ip route 0.0.0.0/32 null0\n'
@@ -156,8 +155,9 @@ class Output(ActorBaseFT):
                 now = utc_millisec()
                 age_out = now+self.age_out*1000
                 value['_age_out'] = age_out
-                self.table.put(str(address), value)
                 self.statistics['added'] += 1
+                self.table.num_indicators += 1
+                self.table.put(str(address), value)
             else:
                 self.statistics['ignored'] += 1
                 return
@@ -181,6 +181,7 @@ class Output(ActorBaseFT):
                     return
                 current_value.pop('_age_out', None)
                 self.statistics['removed'] += 1
+                self.table.num_indicators -= 1
                 self.table.delete(str(address))
             else:
                 self.statistics['ignored'] += 1
