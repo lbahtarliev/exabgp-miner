@@ -8,14 +8,13 @@ prototypes:
     class: exabgpminer.Output
     config:
       exabgp_host: '127.0.0.1'
-      exabgp_port: '65001'
+      exabgp_port: '65002'
     description: >
       RAW JSON to EXABGP Listener and Processor.
       AKAT Technologies OOD
     development_status: STABLE
     indicator_types:
       - IPv4
-      - IPv6
     node_type: output
     tags:
       - extension
