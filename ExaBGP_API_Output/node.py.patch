@@ -1,0 +1,129 @@
+@@ -13,6 +13,7 @@
+ 
+ from minemeld.ft.base import _counting
+ from minemeld.ft import table
++from minemeld.ft.utils import utc_millisec
+ #from minemeld.ft import actorbase
+ from minemeld.ft.base import BaseFT
+ from minemeld.ft.actorbase import ActorBaseFT
+@@ -87,6 +88,16 @@
+     def reset(self):
+         self._initialize_table(truncate=True)
+ 
++    def _eval_exabgp(self, message, source=None, indicator=None, value=None):
++        indicators = [indicator]
++        if (value['type'] == 'IPv4' or value['type'] == 'IPv6') and '-' in indicator:
++            a1, a2 = indicator.split('-', 1)
++            if a1 == a2:
++                indicators = [a1]
++            else:
++                indicators = map(str, netaddr.IPRange(a1, a2).cidrs())
++        return indicators
++
+     def _send_exabgp(self, message, source=None, indicator=None, value=None):
+         now = datetime.datetime.now()
+ 
+@@ -129,66 +140,48 @@
+                      req = urllib2.Request('http://' + self.exabgp_host + ':' + str(self.exabgp_port))
+                      # req.add_header('Content-Type', 'application/json')
+                      req.add_header('Content-Type', 'application/x-www-form-urlencoded')
+-                     LOG.info("%s: %s - %s of %s", str(fields['message']).upper(), ipcidr, str(count+1), str(len(ipaddr)))
++                     #LOG.info("%s: %s - %s of %s", str(fields['message']).upper(), ipcidr, str(count+1), str(len(ipaddr)))
+                      response = urllib2.urlopen(req, data)
+-                     count += 1
+                      self.statistics['message.sent'] += 1
++                     count += 1
+             else:
+                      LOG.info("Bogon CIDRs found: %s", str(len(ipaddr)))
+-#                    yield 'ip route 0.0.0.0/32 null0\n'
+         except:
+-            self._ls_socket = None
+-            raise
++            pass
++
+ 
+     @_counting('update.processed')
+     def filtered_update(self, source=None, indicator=None, value=None):
+-        self._send_exabgp(
+-            'announce',
+-            source=source,
+-            indicator=indicator,
+-            value=value
+-        )
++        indicators = self._eval_exabgp('announce', source=source, indicator=indicator, value=value)
++        for i in indicators:
++            value['__indicator'] = i
++            now = utc_millisec()
++            age_out = now+self.age_out*1000
++            value['_age_out'] = age_out
++            self.statistics['added'] += 1
++            self.table.put(str(i), value)
++            self._send_exabgp(
++                'announce',
++                source=source,
++                indicator=indicator,
++                value=value
++            )
+ 
+-        try:
+-            ipaddr = self._genipformat(indicator)
+-            if len(ipaddr) >= 1:
+-                now = utc_millisec()
+-                age_out = now+self.age_out*1000
+-                value['_age_out'] = age_out
+-                self.statistics['added'] += 1
+-                self.table.num_indicators += 1
+-                self.table.put(str(address), value)
+-            else:
+-                self.statistics['ignored'] += 1
+-                return
+-        except:
+-            self.statistics['ignored'] += 1
+-            return
+ 
+     @_counting('withdraw.processed')
+     def filtered_withdraw(self, source=None, indicator=None, value=None):
+-        self._send_exabgp(
+-            'withdraw',
+-            source=source,
+-            indicator=indicator,
+-            value=value
+-        )
++        indicators = self._eval_exabgp('withdraw', source=source, indicator=indicator, value=value)
++        for i in indicators:
++            value['__indicator'] = i
++            self.statistics['removed'] += 1
++            self.table.delete(str(i))
++            self._send_exabgp(
++                'withdraw',
++                source=source,
++                indicator=indicator,
++                value=value
++            )
+ 
+-        try:
+-            ipaddr = self._genipformat(indicator)
+-            if len(ipaddr) >= 1:
+-                if current_value is None:
+-                    return
+-                current_value.pop('_age_out', None)
+-                self.statistics['removed'] += 1
+-                self.table.num_indicators -= 1
+-                self.table.delete(str(address))
+-            else:
+-                self.statistics['ignored'] += 1
+-                return
+-        except:
+-            self.statistics['ignored'] += 1
+-            return
+ 
+     def mgmtbus_status(self):
+         result = super(Output, self).mgmtbus_status()
+@@ -196,6 +189,7 @@
+ 
+     def length(self, source=None):
+         return self.table.num_indicators
++        #return self.length()
+ 
+     def start(self):
+         super(Output, self).start()
