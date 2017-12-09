@@ -18,31 +18,22 @@ from minemeld.ft.utils import utc_millisec
 from minemeld.ft.base import BaseFT
 from minemeld.ft.actorbase import ActorBaseFT
 
-VERSION = "0.1.8"
+VERSION = "0.1.10"
 
 LOG = logging.getLogger(__name__)
 
 class Output(ActorBaseFT):
     def __init__(self, name, chassis, config):
-        self.locals = {
-            'version': VERSION
-        }
-
-        self._actor = None
 
         super(Output, self).__init__(name, chassis, config)
 
     def configure(self):
         super(Output, self).configure()
 
-        self.queue_maxsize = int(self.config.get('queue_maxsize', 100000))
-        if self.queue_maxsize == 0:
-            self.queue_maxsize = None
-
         self.exabgp_host = self.config.get('exabgp_host', '127.0.0.1')
-        self.exabgp_port = int(self.config.get('exabgp_port', '65002'))
+        self.exabgp_port = int(self.config.get('exabgp_port', '65001'))
         self.age_out = self.config.get('age_out', 3600)
-        self.age_out_interval = self.config.get('age_out_interval', 86400)
+        self.age_out_interval = self.config.get('age_out_interval', None)
 
     def connect(self, inputs, output):
         output = False
@@ -79,31 +70,33 @@ class Output(ActorBaseFT):
             value['__indicator'] = i
             now = utc_millisec()
             age_out = now+self.age_out*1000
+            feed_community = value['feed_community']
             value['_age_out'] = age_out
-            values = { 'command': str(fields['message']) + ' route ' + i + ' next-hop self' }
+            values = { 'command': str(message) + ' route ' + i + ' next-hop self community ' + feed_community }
             data = urllib.urlencode(values)
             req = urllib2.Request('http://' + self.exabgp_host + ':' + str(self.exabgp_port))
             req.add_header('Content-Type', 'application/x-www-form-urlencoded')
             # req.add_header('Content-Type', 'application/json')
             response = urllib2.urlopen(req, data)
-            #LOG.info("%s: %s - %s of %s", str(fields['message']).upper(), ipcidr, str(count+1), str(len(ipaddr)))
-            self.statistics['bgp-messages.sent'] += 1
+            #LOG.info("%s: %s", str(message).upper(), i)
+            self.statistics['message.sent'] += 1
 
         except:
-          pass
+            LOG.error("%s: %s", str(message).upper(), i)
+            pass
 
 
     @_counting('update.processed')
     def filtered_update(self, source=None, indicator=None, value=None):
         self.statistics['added'] += 1
-        self.table.put(str(i), value)
+        self.table.put(str(indicator), value)
         self._eval_send_exabgp('announce', source=source, indicator=indicator, value=value)
 
 
     @_counting('withdraw.processed')
     def filtered_withdraw(self, source=None, indicator=None, value=None):
         self.statistics['removed'] += 1
-        self.table.delete(str(i))
+        self.table.delete(str(indicator))
         self._eval_send_exabgp('withdraw', source=source, indicator=indicator, value=value)
 
 
