@@ -70,7 +70,9 @@ class Output(ActorBaseFT):
             value['__indicator'] = i
             now = utc_millisec()
             age_out = now+self.age_out*1000
-            feed_community = value['feed_community']
+            feed_community = '65000:666'
+            if value['feed_community']:
+                feed_community = value['feed_community']
             value['_age_out'] = age_out
             values = { 'command': str(message) + ' route ' + i + ' next-hop self community ' + feed_community }
             data = urllib.urlencode(values)
