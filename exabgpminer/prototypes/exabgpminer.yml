@@ -8,7 +8,8 @@ prototypes:
     class: exabgpminer.Output
     config:
       exabgp_host: '127.0.0.1'
-      exabgp_port: '65002'
+      exabgp_port: '65001'
+      exabgp_defcomm: '65001:666'
     description: >
       RAW JSON to EXABGP Listener and Processor.
       AKAT Technologies OOD

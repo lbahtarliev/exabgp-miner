@@ -18,7 +18,7 @@ from minemeld.ft.utils import utc_millisec
 from minemeld.ft.base import BaseFT
 from minemeld.ft.actorbase import ActorBaseFT
 
-VERSION = "0.1.11"
+VERSION = "0.1.12"
 
 LOG = logging.getLogger(__name__)
 
@@ -32,6 +32,7 @@ class Output(ActorBaseFT):
 
         self.exabgp_host = self.config.get('exabgp_host', '127.0.0.1')
         self.exabgp_port = int(self.config.get('exabgp_port', '65001'))
+        self.exabgp_defcomm = self.config.get('exabgp_defcomm', '65001:666'))
         self.age_out = self.config.get('age_out', 3600)
         self.age_out_interval = self.config.get('age_out_interval', None)
 
@@ -73,7 +74,7 @@ class Output(ActorBaseFT):
             try:
                 feed_community = value['feed_community']
             except:
-                feed_community = '65001:123'
+                feed_community = self.exabgp_defcomm
             value['_age_out'] = age_out
             values = { 'command': str(message) + ' route ' + i + ' next-hop self community ' + feed_community }
             data = urllib.urlencode(values)
