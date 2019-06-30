@@ -24,8 +24,8 @@ setup(
     description=_metadata['description'],
     classifiers=[
         'Framework :: MineMeld',
-        'Development Status :: 3 - Alpha',
-        'License :: OSI Approved :: Apache Software License',
+        'Development Status :: 4 - Beta',
+        'License :: OSI Approved :: Unlicense',
         'Programming Language :: Python :: 2.7',
         'Topic :: Security',
         'Topic :: Internet'
