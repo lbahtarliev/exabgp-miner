@@ -1,4 +1,4 @@
-#  Copyright 2017 AKAT Technologies OOD
+#  Copyright 2017 Lyuben Bahtarliev
 
 from __future__ import absolute_import
 
@@ -18,7 +18,7 @@ from minemeld.ft.utils import utc_millisec
 from minemeld.ft.base import BaseFT
 from minemeld.ft.actorbase import ActorBaseFT
 
-VERSION = "0.1.12"
+VERSION = "0.1.13"
 
 LOG = logging.getLogger(__name__)
 
