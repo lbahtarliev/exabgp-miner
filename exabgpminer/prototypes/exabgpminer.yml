@@ -4,15 +4,14 @@ description: >
 
 prototypes:
   http_api:
-    author: AKAT Technologies OOD
+    author: Lyuben Bahtarliev
     class: exabgpminer.Output
     config:
       exabgp_host: '127.0.0.1'
       exabgp_port: '65001'
       exabgp_defcomm: '65001:666'
     description: >
-      RAW JSON to EXABGP Listener and Processor.
-      AKAT Technologies OOD
+      RAW JSON to EXABGP HTTP API Listener and Processor.
     development_status: STABLE
     indicator_types:
       - IPv4
